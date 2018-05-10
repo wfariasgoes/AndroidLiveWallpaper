@@ -1,9 +1,11 @@
-package com.br.livewallpaper;
+package com.br.livewallpaper.view.activity;
 
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.br.livewallpaper.R;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -5,7 +5,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragment.DailyPopularFragment">
+        tools:context=".view.fragment.DailyPopularFragment">
 
         <!-- TODO: Update blank fragment layout -->
         <TextView

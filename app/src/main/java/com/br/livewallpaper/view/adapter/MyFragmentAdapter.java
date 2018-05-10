@@ -1,4 +1,4 @@
-package com.br.livewallpaper.adapter;
+package com.br.livewallpaper.view.adapter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;

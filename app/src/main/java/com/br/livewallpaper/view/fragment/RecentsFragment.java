@@ -1,4 +1,4 @@
-package com.br.livewallpaper.fragment;
+package com.br.livewallpaper.view.fragment;
 
 
 import android.os.Bundle;

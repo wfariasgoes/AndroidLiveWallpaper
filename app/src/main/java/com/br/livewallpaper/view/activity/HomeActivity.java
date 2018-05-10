@@ -1,25 +1,23 @@
-package com.br.livewallpaper;
+package com.br.livewallpaper.view.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-import com.br.livewallpaper.adapter.MyFragmentAdapter;
+import com.br.livewallpaper.R;
+import com.br.livewallpaper.view.adapter.MyFragmentAdapter;
 import com.br.livewallpaper.databinding.ActivityHomeBinding;
-import com.br.livewallpaper.fragment.CategoryFragment;
-import com.br.livewallpaper.fragment.DailyPopularFragment;
-import com.br.livewallpaper.fragment.RecentsFragment;
+import com.br.livewallpaper.view.fragment.CategoryFragment;
+import com.br.livewallpaper.view.fragment.DailyPopularFragment;
+import com.br.livewallpaper.view.fragment.RecentsFragment;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,9 +42,10 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void initView() {
-
-        setupViewPager(binding.viewPager);
+        adapter = new MyFragmentAdapter(getSupportFragmentManager(), this);
+        binding.viewPager.setAdapter(adapter);
         binding.tabLayout.setupWithViewPager(binding.viewPager);
+        setupViewPager(binding.viewPager);
         setupTabIcons();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -60,9 +59,9 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void setupTabIcons() {
-        binding.tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-        binding.tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        binding.tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+//        binding.tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+//        binding.tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+//        binding.tabLayout.getTabAt(2).setIcon(tabIcons[2]);
 
     }
 
@@ -109,8 +108,9 @@ public class HomeActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+            Toast.makeText(this, "",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_gallery) {
-
+            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {

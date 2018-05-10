@@ -5,7 +5,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragment.RecentsFragment">
+        tools:context=".view.fragment.RecentsFragment">
 
         <!-- TODO: Update blank fragment layout -->
         <TextView
