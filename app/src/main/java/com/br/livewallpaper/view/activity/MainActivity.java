@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(homeIntent);
                 finish();
             }
-        },3000); // sleep 3 segundos
+        },5000); // sleep 3 segundos
     }
 
 }

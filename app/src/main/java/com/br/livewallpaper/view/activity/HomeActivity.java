@@ -67,8 +67,8 @@ public class HomeActivity extends AppCompatActivity
 
     public void setupViewPager(ViewPager viewPager){
         adapter = new MyFragmentAdapter(getSupportFragmentManager(), this);
-        adapter.addFrag(new CategoryFragment().getInstance(),"Categoria");
-        adapter.addFrag(new DailyPopularFragment().getInstance(), "Diário");
+        adapter.addFrag(new CategoryFragment().getInstance(),"Category");
+        adapter.addFrag(new DailyPopularFragment().getInstance(), "Diários");
         adapter.addFrag(new RecentsFragment().getInstance(), "Recentes");
         viewPager.setAdapter(adapter);
     }

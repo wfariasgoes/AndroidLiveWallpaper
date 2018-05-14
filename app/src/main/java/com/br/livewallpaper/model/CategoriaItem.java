@@ -1,15 +1,15 @@
 package com.br.livewallpaper.model;
 
-public class Categoria {
+public class CategoriaItem {
 
 
     private String nome;
     private String imageLink;
 
-    public Categoria() {
+    public CategoriaItem() {
     }
 
-    public Categoria(String nome, String imageLink) {
+    public CategoriaItem(String nome, String imageLink) {
         this.nome = nome;
         this.imageLink = imageLink;
     }

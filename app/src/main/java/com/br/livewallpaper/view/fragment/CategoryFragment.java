@@ -1,8 +1,8 @@
 package com.br.livewallpaper.view.fragment;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
@@ -12,8 +12,9 @@ import android.view.ViewGroup;
 
 import com.br.livewallpaper.R;
 import com.br.livewallpaper.databinding.FragmentCategoryBinding;
-import com.br.livewallpaper.model.Categoria;
+import com.br.livewallpaper.model.CategoriaItem;
 import com.br.livewallpaper.view.Common.Common;
+import com.br.livewallpaper.view.activity.ListWallpaperActivity;
 import com.br.livewallpaper.view.interfaces.ItemClickListener;
 import com.br.livewallpaper.view.viewholder.CategoriaViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -32,8 +33,8 @@ public class CategoryFragment extends Fragment {
     DatabaseReference categoriaBackground;
 
     //FirebaseUi Adapter
-    FirebaseRecyclerOptions<Categoria> options;
-    FirebaseRecyclerAdapter<Categoria, CategoriaViewHolder> adapter;
+    FirebaseRecyclerOptions<CategoriaItem> options;
+    FirebaseRecyclerAdapter<CategoriaItem, CategoriaViewHolder> adapter;
 
     //databind
     FragmentCategoryBinding binding;
@@ -45,13 +46,13 @@ public class CategoryFragment extends Fragment {
         database = FirebaseDatabase.getInstance();
         categoriaBackground = database.getReference(Common.STR_CATEGORY_BACKGROUND);
 
-        options = new FirebaseRecyclerOptions.Builder<Categoria>()
-                .setQuery(categoriaBackground, Categoria.class)
+        options = new FirebaseRecyclerOptions.Builder<CategoriaItem>()
+                .setQuery(categoriaBackground, CategoriaItem.class)
                 .build();
 
-        adapter = new FirebaseRecyclerAdapter<Categoria, CategoriaViewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<CategoriaItem, CategoriaViewHolder>(options) {
             @Override
-            protected void onBindViewHolder( final CategoriaViewHolder holder, int position, final Categoria model) {
+            protected void onBindViewHolder( final CategoriaViewHolder holder, int position, final CategoriaItem model) {
                 Picasso.with(getActivity())
                         .load(model.getImageLink())
                         .networkPolicy(NetworkPolicy.OFFLINE)
@@ -85,7 +86,10 @@ public class CategoryFragment extends Fragment {
                 holder.setListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        //Code late for datail category
+                        Common.CATEGORY_ID_SELECTED = adapter.getRef(position).getKey(); //get key of item
+                        Common.CATEGORY_SELECTED = model.getNome();
+                        startActivity( new Intent( getActivity(), ListWallpaperActivity.class));
+
                     }
                 });
             }
