@@ -1,7 +1,11 @@
 package com.br.livewallpaper.view.activity;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.br.livewallpaper.R;
+import com.br.livewallpaper.view.Common.Common;
 import com.br.livewallpaper.view.adapter.MyFragmentAdapter;
 import com.br.livewallpaper.databinding.ActivityHomeBinding;
 import com.br.livewallpaper.view.fragment.CategoryFragment;
@@ -32,11 +37,32 @@ public class HomeActivity extends AppCompatActivity
     };
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case Common.PERMISSION_REQUEST_CODE:
+            {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    Toast.makeText(this, "Permissão concedida", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(this, "Você precisa aceitar a permissão para baixar a imagem", Toast.LENGTH_SHORT).show();
+            }
+            break;
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
-        binding.toolbar.setTitle("WFG Wallpapper");
+        binding.toolbar.setTitle("Papeis de parede");
         setSupportActionBar(binding.toolbar);
+
+        //Request runtime permission
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE ) != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Common.PERMISSION_REQUEST_CODE);
+        }
 
         initView();
     }

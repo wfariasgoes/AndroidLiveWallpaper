@@ -1,5 +1,6 @@
 package com.br.livewallpaper.view.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -109,7 +110,10 @@ public class ListWallpaperActivity extends AppCompatActivity {
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        Toast.makeText(ListWallpaperActivity.this, "Em desenvolvimento (%s) "+position, Toast.LENGTH_SHORT).show();
+//                        Common.CATEGORY_ID_SELECTED = adapter.getRef(position).getKey(); //get key of item
+                        Intent intent = new Intent(  ListWallpaperActivity.this, ViewWallpaperActivity.class);
+                        Common.select_background = model;
+                        startActivity( intent);
                     }
                 });
             }
