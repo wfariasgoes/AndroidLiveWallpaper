@@ -14,11 +14,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.br.livewallpaper.R;
+import com.br.livewallpaper.database.Recents;
+import com.br.livewallpaper.database.datasource.RecentRepository;
+import com.br.livewallpaper.database.localDatabase.LocalDatabase;
+import com.br.livewallpaper.database.localDatabase.RecentsDataSource;
 import com.br.livewallpaper.databinding.ActivityViewWallpaperBinding;
 import com.br.livewallpaper.helper.SaveImageHelper;
 import com.br.livewallpaper.view.Common.Common;
@@ -29,10 +34,24 @@ import java.io.IOException;
 import java.util.UUID;
 
 import dmax.dialog.SpotsDialog;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class ViewWallpaperActivity extends AppCompatActivity {
 
     ActivityViewWallpaperBinding binding;
+
+    //Room Database
+    CompositeDisposable compositeDisposable;
+    RecentRepository recentRepository;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -93,6 +112,15 @@ public class ViewWallpaperActivity extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        compositeDisposable = new CompositeDisposable();
+        LocalDatabase database = LocalDatabase.getInstance(this);
+        recentRepository = RecentRepository.getInstance( RecentsDataSource.getInstance(database.recentsDAO()) );
+
+        init();
+
+    }
+
+    private void init() {
         binding.collapsing.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
         binding.collapsing.setExpandedTitleTextAppearance(R.style.ExpanableAppBar);
         binding.collapsing.setTitle(Common.CATEGORY_SELECTED);
@@ -100,6 +128,10 @@ public class ViewWallpaperActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(Common.select_background.getImageLink())
                 .into(binding.imgThumb);
+
+        //add to recents
+        addToRecents();
+
 
         binding.fabWallpaper.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +142,10 @@ public class ViewWallpaperActivity extends AppCompatActivity {
             }
         });
 
+        downloadImage();
+    }
+
+    private void downloadImage() {
         binding.fabDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,20 +162,54 @@ public class ViewWallpaperActivity extends AppCompatActivity {
                     Picasso.with(getBaseContext())
                             .load(Common.select_background.getImageLink())
                             .into(new SaveImageHelper(getBaseContext(),
-                            dialog,
-                            getApplicationContext().getContentResolver(),
-                            fileName,
-                            "WFG Live Wallpaper Image"));
+                                    dialog,
+                                    getApplicationContext().getContentResolver(),
+                                    fileName,
+                                    "WFG Live Wallpaper Image"));
 
                 }
             }
         });
+    }
+
+    private void addToRecents() {
+        Disposable disposable = Observable.create(new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) throws Exception {
+                Recents recents = new Recents(
+                        Common.select_background.getImageLink(),
+                        Common.select_background.getCategoryId(),
+                        String.valueOf(System.currentTimeMillis()));
+                recentRepository.insertRecents(recents);
+                e.onComplete();
+
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.e("ERROR_ADD",throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+
+                    }
+                });
+        compositeDisposable.add(disposable);
 
     }
 
     @Override
     protected void onDestroy() {
         Picasso.with(this).cancelRequest(target);
+        compositeDisposable.clear();
         super.onDestroy();
     }
 

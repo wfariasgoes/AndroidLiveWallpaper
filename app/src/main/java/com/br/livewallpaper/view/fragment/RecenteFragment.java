@@ -23,28 +23,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
+/**
+ * A simple {@link Fragment} subclass.
+ */
 @SuppressLint("ValidFragment")
-public class RecentsFragment extends Fragment {
-
+public class RecenteFragment extends Fragment {
+    private static int INDEX = 1;
+    Context context;
+    RecyclerView recyclerRecente;
     List<Recents> recents;
     RecentsAdapter adapter;
-    Context context;
-//    FragmentRecentsBinding binding;
-    RecyclerView recyclerRecente;
 
     //Room database
     CompositeDisposable compositeDisposable;
     RecentRepository recentRepository;
 
-    private static RecentsFragment INSTANCE = null;
+    private static RecenteFragment INSTANCE = null;
 
-    @SuppressLint("ValidFragment")
-    public RecentsFragment(Context context) {
+    public RecenteFragment(Context context) {
         this.context = context;
 
         compositeDisposable = new CompositeDisposable();
@@ -52,43 +54,29 @@ public class RecentsFragment extends Fragment {
         recentRepository = RecentRepository.getInstance(RecentsDataSource.getInstance(database.recentsDAO()));
     }
 
-    public static RecentsFragment getInstance(Context context) {
+    public static RecenteFragment getInstance(Context context) {
         if (INSTANCE == null)
-            INSTANCE = new RecentsFragment(context);
+            INSTANCE = new RecenteFragment(context);
         return INSTANCE;
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_recents, container, false);
-        View view = inflater.inflate(R.layout.fragment_recents,container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_recente, container, false);
 
-        recyclerRecente = (RecyclerView) view.findViewById(R.id.recyclerRecente);
+        recyclerRecente = (RecyclerView) view.findViewById(R.id.recyclerRecent);
         recyclerRecente.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager( getActivity(),2);
         recyclerRecente.setLayoutManager(gridLayoutManager);
-
         recents = new ArrayList<>();
-
         adapter = new RecentsAdapter(context, recents);
         recyclerRecente.setAdapter(adapter);
-
-        if (recents != null){
-            for (Recents r: recents ) {
-                Log.v("VERBOSE", r.getCategoryId());
-            }
-        }
-
         loadRecents();
+
+
         return view;
     }
-
-    private void initView() {
-
-
-    }
-
     private void loadRecents() {
         Disposable disposable =  recentRepository.getAllRecents()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -107,11 +95,10 @@ public class RecentsFragment extends Fragment {
 
         compositeDisposable.add(disposable);
     }
-
     private void onGetAllRecentSuccess(List<Recents> recents) {
-            recents.clear();
-            recents.addAll(recents);
-            adapter.notifyDataSetChanged();
+        this.recents.clear();
+        this.recents.addAll(recents);
+        adapter.notifyDataSetChanged();
     }
 
     @Override

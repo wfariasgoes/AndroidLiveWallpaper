@@ -16,10 +16,9 @@ public class Recents {
     private String categoryId;
 
     @ColumnInfo(name = "saveTime")
-    @NonNull
     private String saveTime;
 
-    public Recents(@NonNull String imageLink, @NonNull String categoryId, @NonNull String saveTime) {
+    public Recents(@NonNull String imageLink, @NonNull String categoryId, String saveTime) {
         this.imageLink = imageLink;
         this.categoryId = categoryId;
         this.saveTime = saveTime;
@@ -43,12 +42,11 @@ public class Recents {
         this.categoryId = categoryId;
     }
 
-    @NonNull
     public String getSaveTime() {
         return saveTime;
     }
 
-    public void setSaveTime(@NonNull String saveTime) {
+    public void setSaveTime(String saveTime) {
         this.saveTime = saveTime;
     }
 

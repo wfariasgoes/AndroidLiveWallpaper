@@ -69,7 +69,6 @@ public class ListWallpaperActivity extends AppCompatActivity {
         adapter = new FirebaseRecyclerAdapter<WallpaperItem, ListWallpaperViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull final ListWallpaperViewHolder holder, int position,final @NonNull WallpaperItem model) {
-                if(model.getImageLink() != null){
                     Picasso.with(getBaseContext())
                             .load(model.getImageLink())
                             .networkPolicy(NetworkPolicy.OFFLINE)
@@ -92,7 +91,7 @@ public class ListWallpaperActivity extends AppCompatActivity {
 
                                                 @Override
                                                 public void onError() {
-                                                    Log.e("ERROR_WFG", "Não foi possível renderizar a imagem!");
+                                                    Log.e("ERROR_LIST", "Não foi possível renderizar a imagem!");
                                                 }
                                             });
 
@@ -101,11 +100,6 @@ public class ListWallpaperActivity extends AppCompatActivity {
 
 
                             });
-                }else{
-                    Toast.makeText(ListWallpaperActivity.this, "Não existe nenhuma imagem", Toast.LENGTH_SHORT).show();
-                }
-
-
 
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override

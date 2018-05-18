@@ -9,8 +9,6 @@ public class WallpaperItem {
     }
 
 
-
-
     public WallpaperItem(String imageUrl, String categoryId) {
         this.imageUrl = imageUrl;
         this.categoryId = categoryId;

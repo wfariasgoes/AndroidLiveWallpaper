@@ -25,7 +25,7 @@ public class PrincipalAdapter extends FragmentPagerAdapter {
         else if (position == 1)
             return DailyPopularFragment.getInstance();
         else if (position == 2)
-            return RecentsFragment.getInstance();
+            return RecentsFragment.getInstance(context);
         else
             return null;
     }
@@ -40,7 +40,7 @@ public class PrincipalAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position){
             case 0:
-                return "CategoriaItem";
+                return "Categoria";
             case 1:
                 return "Diário";
             case 2:

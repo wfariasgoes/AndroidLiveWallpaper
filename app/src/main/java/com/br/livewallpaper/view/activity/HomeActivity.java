@@ -20,8 +20,10 @@ import com.br.livewallpaper.R;
 import com.br.livewallpaper.view.Common.Common;
 import com.br.livewallpaper.view.adapter.MyFragmentAdapter;
 import com.br.livewallpaper.databinding.ActivityHomeBinding;
+import com.br.livewallpaper.view.adapter.PrincipalAdapter;
 import com.br.livewallpaper.view.fragment.CategoryFragment;
 import com.br.livewallpaper.view.fragment.DailyPopularFragment;
+import com.br.livewallpaper.view.fragment.RecenteFragment;
 import com.br.livewallpaper.view.fragment.RecentsFragment;
 
 public class HomeActivity extends AppCompatActivity
@@ -29,7 +31,7 @@ public class HomeActivity extends AppCompatActivity
 
     ActivityHomeBinding binding;
     private MyFragmentAdapter adapter;
-
+//    private PrincipalAdapter adapter;;
     private int[] tabIcons = {
             R.drawable.ic_event_note_black_24dp,
             R.drawable.ic_explore_black_24dp,
@@ -69,6 +71,7 @@ public class HomeActivity extends AppCompatActivity
 
     private void initView() {
         adapter = new MyFragmentAdapter(getSupportFragmentManager(), this);
+//        adapter = new PrincipalAdapter(getSupportFragmentManager(), this);
         binding.viewPager.setAdapter(adapter);
         binding.tabLayout.setupWithViewPager(binding.viewPager);
         setupViewPager(binding.viewPager);
@@ -93,9 +96,10 @@ public class HomeActivity extends AppCompatActivity
 
     public void setupViewPager(ViewPager viewPager){
         adapter = new MyFragmentAdapter(getSupportFragmentManager(), this);
-        adapter.addFrag(new CategoryFragment().getInstance(),"Category");
-        adapter.addFrag(new DailyPopularFragment().getInstance(), "Diários");
-        adapter.addFrag(new RecentsFragment().getInstance(), "Recentes");
+        adapter.addFrag(CategoryFragment.getInstance(),"Categoria");
+//        adapter.addFrag(RecentsFragment.getInstance(this), "Recentes");
+        adapter.addFrag(DailyPopularFragment.getInstance(), "Diários");
+        adapter.addFrag(RecenteFragment.getInstance(this), "Recente");
         viewPager.setAdapter(adapter);
     }
 
