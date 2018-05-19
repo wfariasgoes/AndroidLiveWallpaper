@@ -4,6 +4,7 @@ public class WallpaperItem {
 
     public String imageUrl;
     public String categoryId;
+    public long viewCount;
 
     public WallpaperItem() {
     }
@@ -28,5 +29,13 @@ public class WallpaperItem {
 
     public void setImageLink(String imageLink) {
         this.imageUrl = imageLink;
+    }
+
+    public long getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(long viewCount) {
+        this.viewCount = viewCount;
     }
 }

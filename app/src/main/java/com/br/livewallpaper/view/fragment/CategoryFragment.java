@@ -50,6 +50,35 @@ public class CategoryFragment extends Fragment {
                 .setQuery(categoriaBackground, CategoriaItem.class)
                 .build();
 
+
+    }
+
+
+    public static CategoryFragment getInstance() {
+       if(INSTANCE == null)
+           INSTANCE =  new CategoryFragment();
+       return INSTANCE;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_category, container, false);
+
+        binding.recyclerCategoria.setHasFixedSize(true);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager( getActivity(),2);
+        binding.recyclerCategoria.setLayoutManager(gridLayoutManager);
+        loadFirebase();
+        setCategoria();
+        return binding.getRoot();
+    }
+
+    private void loadFirebase() {
         adapter = new FirebaseRecyclerAdapter<CategoriaItem, CategoriaViewHolder>(options) {
             @Override
             protected void onBindViewHolder( final CategoriaViewHolder holder, int position, final CategoriaItem model) {
@@ -101,31 +130,6 @@ public class CategoryFragment extends Fragment {
                 return new CategoriaViewHolder(itemView);
             }
         };
-    }
-
-
-    public static CategoryFragment getInstance() {
-       if(INSTANCE == null)
-           INSTANCE =  new CategoryFragment();
-       return INSTANCE;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_category, container, false);
-
-        binding.recyclerCategoria.setHasFixedSize(true);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager( getActivity(),2);
-        binding.recyclerCategoria.setLayoutManager(gridLayoutManager);
-
-        setCategoria();
-        return binding.getRoot();
     }
 
     private void setCategoria() {

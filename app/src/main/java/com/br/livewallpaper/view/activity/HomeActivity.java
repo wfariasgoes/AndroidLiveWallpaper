@@ -20,11 +20,9 @@ import com.br.livewallpaper.R;
 import com.br.livewallpaper.view.Common.Common;
 import com.br.livewallpaper.view.adapter.MyFragmentAdapter;
 import com.br.livewallpaper.databinding.ActivityHomeBinding;
-import com.br.livewallpaper.view.adapter.PrincipalAdapter;
 import com.br.livewallpaper.view.fragment.CategoryFragment;
-import com.br.livewallpaper.view.fragment.DailyPopularFragment;
+import com.br.livewallpaper.view.fragment.TrendingFragment;
 import com.br.livewallpaper.view.fragment.RecenteFragment;
-import com.br.livewallpaper.view.fragment.RecentsFragment;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -98,8 +96,8 @@ public class HomeActivity extends AppCompatActivity
         adapter = new MyFragmentAdapter(getSupportFragmentManager(), this);
         adapter.addFrag(CategoryFragment.getInstance(),"Categoria");
 //        adapter.addFrag(RecentsFragment.getInstance(this), "Recentes");
-        adapter.addFrag(DailyPopularFragment.getInstance(), "Diários");
         adapter.addFrag(RecenteFragment.getInstance(this), "Recente");
+        adapter.addFrag(TrendingFragment.getInstance(), "Tendências");
         viewPager.setAdapter(adapter);
     }
 

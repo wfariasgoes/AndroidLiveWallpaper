@@ -82,6 +82,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<ListWallpaperViewHolder
                 item.setCategoryId(recents.get(position).getCategoryId());
                 item.setImageLink(recents.get(position).getImageLink());
                 Common.select_background = item;
+                Common.select_background_key = recents.get(position).getKey();
                 context.startActivity(intent);
 
             }

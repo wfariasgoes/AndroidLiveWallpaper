@@ -18,10 +18,14 @@ public class Recents {
     @ColumnInfo(name = "saveTime")
     private String saveTime;
 
-    public Recents(@NonNull String imageLink, @NonNull String categoryId, String saveTime) {
+    @ColumnInfo(name = "key")
+    private String key;
+
+    public Recents(@NonNull String imageLink, @NonNull String categoryId, String saveTime, String key) {
         this.imageLink = imageLink;
         this.categoryId = categoryId;
         this.saveTime = saveTime;
+        this.key = key;
     }
 
     @NonNull
@@ -50,4 +54,11 @@ public class Recents {
         this.saveTime = saveTime;
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

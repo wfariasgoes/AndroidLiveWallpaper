@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.br.livewallpaper.view.fragment.CategoryFragment;
-import com.br.livewallpaper.view.fragment.DailyPopularFragment;
-import com.br.livewallpaper.view.fragment.RecentsFragment;
+import com.br.livewallpaper.view.fragment.RecenteFragment;
+import com.br.livewallpaper.view.fragment.TrendingFragment;
 
 public class PrincipalAdapter extends FragmentPagerAdapter {
 
@@ -23,9 +23,9 @@ public class PrincipalAdapter extends FragmentPagerAdapter {
         if (position == 0)
             return CategoryFragment.getInstance();
         else if (position == 1)
-            return DailyPopularFragment.getInstance();
+            return TrendingFragment.getInstance();
         else if (position == 2)
-            return RecentsFragment.getInstance(context);
+            return RecenteFragment.getInstance(context);
         else
             return null;
     }

@@ -5,15 +5,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
-        tools:context=".view.fragment.CategoryFragment">
+        tools:context=".view.fragment.TrendingFragment">
+
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerRecente"
+            android:id="@+id/recyclerTreinding"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
     </RelativeLayout>
 </layout>
-
-
-

@@ -92,6 +92,7 @@ public class ListWallpaperActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onError() {
                                                     Log.e("ERROR_LIST", "Não foi possível renderizar a imagem!");
+
                                                 }
                                             });
 
@@ -104,9 +105,9 @@ public class ListWallpaperActivity extends AppCompatActivity {
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-//                        Common.CATEGORY_ID_SELECTED = adapter.getRef(position).getKey(); //get key of item
                         Intent intent = new Intent(  ListWallpaperActivity.this, ViewWallpaperActivity.class);
                         Common.select_background = model;
+                        Common.select_background_key = adapter.getRef(position).getKey(); //get key of item
                         startActivity( intent);
                     }
                 });

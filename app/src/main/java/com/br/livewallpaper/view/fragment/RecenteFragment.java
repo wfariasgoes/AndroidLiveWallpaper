@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -48,10 +47,10 @@ public class RecenteFragment extends Fragment {
 
     public RecenteFragment(Context context) {
         this.context = context;
-
         compositeDisposable = new CompositeDisposable();
         LocalDatabase database = LocalDatabase.getInstance(context);
-        recentRepository = RecentRepository.getInstance(RecentsDataSource.getInstance(database.recentsDAO()));
+        recentRepository = RecentRepository.
+                getInstance(RecentsDataSource.getInstance(database.recentsDAO()));
     }
 
     public static RecenteFragment getInstance(Context context) {
