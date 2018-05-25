@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.WallpaperManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
@@ -15,9 +16,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.br.livewallpaper.R;
@@ -29,6 +35,14 @@ import com.br.livewallpaper.databinding.ActivityViewWallpaperBinding;
 import com.br.livewallpaper.helper.SaveImageHelper;
 import com.br.livewallpaper.model.WallpaperItem;
 import com.br.livewallpaper.view.Common.Common;
+import com.br.livewallpaper.view.WLPActivity;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -54,14 +68,21 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class ViewWallpaperActivity extends AppCompatActivity {
+public class ViewWallpaperActivity extends WLPActivity {
 
     ActivityViewWallpaperBinding binding;
 
     //Room Database
     CompositeDisposable compositeDisposable;
     RecentRepository recentRepository;
+
+    private ViewGroup mRoot;
+
+    //Facebook
+    private CallbackManager callbackManager;
+    private ShareDialog shareDialog;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -113,8 +134,74 @@ public class ViewWallpaperActivity extends AppCompatActivity {
         }
     };
 
+    private Target facebookConvertBitmap = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            SharePhoto sharePhoto = new SharePhoto.Builder()
+                .setBitmap(bitmap)
+                .build();
+
+            if (shareDialog.canShow(SharePhotoContent.class)){
+                SharePhotoContent content = new SharePhotoContent.Builder()
+                        .addPhoto(sharePhoto)
+                        .build();
+                shareDialog.show(content);
+            }
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+        }
+    };
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+            TransitionInflater inflater = TransitionInflater.from(this);
+            Transition transition = inflater.inflateTransition(R.transition.transitions);
+
+            getWindow().setSharedElementEnterTransition(transition);
+
+            Transition transition1 = getWindow().getSharedElementEnterTransition();
+            transition1.addListener(new Transition.TransitionListener() {
+                @Override
+                public void onTransitionStart(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionEnd(Transition transition) {
+//                    TransitionManager.beginDelayedTransition(mRoot, new Slide());
+//                tvDescription.setVisibility( View.VISIBLE );
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
+
+                }
+            });
+        }
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_view_wallpaper);
         setSupportActionBar(binding.toolbar);
@@ -122,6 +209,12 @@ public class ViewWallpaperActivity extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+        //Init Facebook
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
+
+        //Init RoomDatabase
         compositeDisposable = new CompositeDisposable();
         LocalDatabase database = LocalDatabase.getInstance(this);
         recentRepository = RecentRepository.getInstance( RecentsDataSource.getInstance(database.recentsDAO()) );
@@ -137,7 +230,7 @@ public class ViewWallpaperActivity extends AppCompatActivity {
 
         Picasso.with(this)
                 .load(Common.select_background.getImageLink())
-                .into(binding.imgThumb);
+                .into(binding.imgWallpaperItem);
 
         //add to recents
         addToRecents();
@@ -152,8 +245,40 @@ public class ViewWallpaperActivity extends AppCompatActivity {
             }
         });
 
+        binding.fbShare.setOnClickListener(onClickListenerShare);
+
+
         downloadImage();
     }
+
+    View.OnClickListener onClickListenerShare = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //Create callbakc
+            shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+                @Override
+                public void onSuccess(Sharer.Result result) {
+                    Toast.makeText(ViewWallpaperActivity.this, "Compartilhado com Sucesso!", Toast.LENGTH_SHORT).show();
+                }   
+
+                @Override
+                public void onCancel() {
+                    Toast.makeText(ViewWallpaperActivity.this, "Compartilhamento Cancelado!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(FacebookException error) {
+                    Toast.makeText(ViewWallpaperActivity.this, "Erro "+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            Picasso.with(getBaseContext())
+                    .load(Common.select_background.getImageLink())
+                    .into(facebookConvertBitmap);
+        }
+    };
+
+
 
     private void downloadImage() {
         binding.fabDownload.setOnClickListener(new View.OnClickListener() {

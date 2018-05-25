@@ -24,6 +24,7 @@
                 android:scaleType="centerCrop" />
 
             <TextView
+                fontPath="fonts/OpenSans-Bold.ttf"
                 android:id="@+id/tvName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

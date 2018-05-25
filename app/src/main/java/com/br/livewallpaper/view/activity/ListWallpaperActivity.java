@@ -2,7 +2,11 @@ package com.br.livewallpaper.view.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,12 +15,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.br.livewallpaper.R;
 import com.br.livewallpaper.databinding.ActivityListWallpaperBinding;
 import com.br.livewallpaper.model.WallpaperItem;
 import com.br.livewallpaper.view.Common.Common;
+import com.br.livewallpaper.view.WLPActivity;
 import com.br.livewallpaper.view.interfaces.ItemClickListener;
 import com.br.livewallpaper.view.viewholder.ListWallpaperViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -27,7 +33,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-public class ListWallpaperActivity extends AppCompatActivity {
+public class ListWallpaperActivity extends WLPActivity {
 
     Query query;
     FirebaseRecyclerOptions<WallpaperItem> options;
@@ -105,10 +111,8 @@ public class ListWallpaperActivity extends AppCompatActivity {
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        Intent intent = new Intent(  ListWallpaperActivity.this, ViewWallpaperActivity.class);
-                        Common.select_background = model;
-                        Common.select_background_key = adapter.getRef(position).getKey(); //get key of item
-                        startActivity( intent);
+                        sendActity(view,model,adapter, position);
+
                     }
                 });
             }
@@ -127,6 +131,27 @@ public class ListWallpaperActivity extends AppCompatActivity {
         adapter.startListening();
         binding.recyclerListWallpaper.setAdapter(adapter);
 
+    }
+
+
+    private void sendActity(View view, WallpaperItem model, FirebaseRecyclerAdapter<WallpaperItem, ListWallpaperViewHolder> adapter, int position){
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Intent intent = new Intent(this, ViewWallpaperActivity.class);
+
+            String transitionName = "wallpaper";
+            View imgThumb = view.findViewById(R.id.imgWallpaperItem);
+//            ViewCompat.setTransitionName(imgThumb, transitionName);
+
+            // TRANSITIONS
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                Pair.create(imgThumb, transitionName));
+
+//            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, imgThumb, transitionName);
+
+            Common.select_background = model;
+            Common.select_background_key = this.adapter.getRef(position).getKey(); //get key of item
+            startActivity(intent, options.toBundle());
+        }
     }
 
     @Override

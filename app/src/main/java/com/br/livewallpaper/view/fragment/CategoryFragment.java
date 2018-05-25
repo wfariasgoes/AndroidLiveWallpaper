@@ -1,5 +1,6 @@
 package com.br.livewallpaper.view.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class CategoryFragment extends Fragment {
@@ -58,6 +61,11 @@ public class CategoryFragment extends Fragment {
        if(INSTANCE == null)
            INSTANCE =  new CategoryFragment();
        return INSTANCE;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(CalligraphyContextWrapper.wrap(context));
     }
 
     @Override

@@ -1,8 +1,10 @@
 package com.br.livewallpaper.view.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -12,19 +14,24 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.br.livewallpaper.R;
 import com.br.livewallpaper.view.Common.Common;
+import com.br.livewallpaper.view.WLPActivity;
 import com.br.livewallpaper.view.adapter.MyFragmentAdapter;
 import com.br.livewallpaper.databinding.ActivityHomeBinding;
 import com.br.livewallpaper.view.fragment.CategoryFragment;
 import com.br.livewallpaper.view.fragment.TrendingFragment;
 import com.br.livewallpaper.view.fragment.RecenteFragment;
 
-public class HomeActivity extends AppCompatActivity
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+public class HomeActivity extends WLPActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     ActivityHomeBinding binding;
@@ -35,6 +42,7 @@ public class HomeActivity extends AppCompatActivity
             R.drawable.ic_explore_black_24dp,
             R.drawable.ic_file_upload_black_24dp
     };
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -53,6 +61,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
         binding.toolbar.setTitle("Papeis de parede");
@@ -95,7 +104,6 @@ public class HomeActivity extends AppCompatActivity
     public void setupViewPager(ViewPager viewPager){
         adapter = new MyFragmentAdapter(getSupportFragmentManager(), this);
         adapter.addFrag(CategoryFragment.getInstance(),"Categoria");
-//        adapter.addFrag(RecentsFragment.getInstance(this), "Recentes");
         adapter.addFrag(RecenteFragment.getInstance(this), "Recente");
         adapter.addFrag(TrendingFragment.getInstance(), "Tendências");
         viewPager.setAdapter(adapter);

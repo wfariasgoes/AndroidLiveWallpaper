@@ -14,6 +14,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/FullScreenTheme">
+
+        <meta-data xmlns:tools="http://schemas.android.com/tools"
+            tools:replace="android:value"
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id">
+        </meta-data>
+        
+        <provider
+            android:authorities="com.facebook.app.FacebookContentProvider190803304899309"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true"/>
         <activity
             android:name=".view.activity.MainActivity"
             android:configChanges="keyboardHidden|orientation"
